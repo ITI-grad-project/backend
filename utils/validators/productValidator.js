@@ -1,7 +1,7 @@
 const { check } = require("express-validator");
 const validator = require("../../middleware/express_vaildator");
 // eslint-disable-next-line import/newline-after-import
-// const Category = require("../../models/categoryModel");
+const Category = require("../../models/categoryModel");
 exports.createProductValidator = [
   check("title")
     .isLength({ min: 3 })
@@ -28,18 +28,18 @@ exports.createProductValidator = [
     .optional()
     .isArray()
     .withMessage("images should be array of string"),
-  // check("category")
-  //   .notEmpty()
-  //   .withMessage("Product must be belong to a category")
-  //   .isMongoId()
-  //   .withMessage("Invalid ID format ")
-  //   .custom(async (val, { req }) => {
-  //     const findCategory = await Category.findById(val);
-  //     if (!findCategory) {
-  //       throw new Error(`category for this id: ${val} not found`);
-  //     }
-  //     return true;
-  //   }),
+  check("category")
+    .notEmpty()
+    .withMessage("Product must be belong to a category")
+    .isMongoId()
+    .withMessage("Invalid ID format ")
+    .custom(async (val, { req }) => {
+      const findCategory = await Category.findById(val);
+      if (!findCategory) {
+        throw new Error(`category for this id: ${val} not found`);
+      }
+      return true;
+    }),
   validator,
 ];
 
