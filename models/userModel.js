@@ -50,8 +50,23 @@ const userSchema = new mongoose.Schema(
     passwordCodeReset: String,
     passwordCodeResetExpire: Date,
     isVerified: Boolean,
+    ratingsAverage: {
+      type: Number,
+      min: [1, "Rating must be above or equal 1.0"],
+      max: [5, "Rating must be below or equal 5.0 "],
+    },
+    ratingQuantity: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
+
+// userSchema.virtual("reviews", {
+//   ref: "Reviews",
+//   foreignField: "product",
+//   localField: "_id",
+// });
 
 module.exports = mongoose.model("Users", userSchema);

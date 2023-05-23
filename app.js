@@ -21,9 +21,13 @@ const ApiError = require("./utils/ApiError");
 const globalErrorHandling = require("./middleware/error_middleware");
 
 const userAuth = require("./routes/authRoutes");
+const category = require("./routes/categoryRoutes");
+const productRoute = require("./routes/productRoute");
 
 //mounting
 app.use("/api/v1/auth", userAuth);
+app.use("/api/v1/categories", category);
+app.use("/api/v1/products", productRoute);
 
 app.all("*", (req, res, next) =>
   next(new ApiError(`Can't find this route : ${req.originalUrl}`, 400))
