@@ -25,6 +25,7 @@ const category = require("./routes/categoryRoutes");
 const productRoute = require("./routes/productRoute");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const addressRoutes = require("./routes/addressRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 //mounting
 app.use("/api/v1/auth", userAuth);
@@ -32,6 +33,7 @@ app.use("/api/v1/categories", category);
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/wishlist", wishlistRoutes);
 app.use("/api/v1/addresses", addressRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.all("*", (req, res, next) =>
   next(new ApiError(`Can't find this route : ${req.originalUrl}`, 400))
