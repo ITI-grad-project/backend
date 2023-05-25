@@ -77,9 +77,6 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
 });
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
-  if (!req.files.imageCover) {
-    return next(new ApiError(`image cover required  `, 400));
-  }
   const imgArray = [];
   if (req.files.images) {
     await Promise.all(
@@ -91,15 +88,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
     );
   }
   req.body.images = imgArray;
-  if (req.files.imageCover) {
-    const result = await cloud.uploads(
-      req.files.imageCover[0].path,
-      "products"
-    );
-    req.body.imageCover = result.url;
-    await fs.unlink(req.files.imageCover[0].path);
-  }
-  const product = await Product.create(req.body);
+  const product = await Product.create({ ...req.body, user: req.user._id });
   return res.status(201).json({ data: product });
 });
 

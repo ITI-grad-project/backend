@@ -26,10 +26,7 @@ const { protect, isAllowedTo } = require("../services/authService");
 
 const upload = require("../middleware/upload_images");
 
-const mixFiles = [
-  { name: "imageCover", maxCount: 1 },
-  { name: "images", maxCount: 5 },
-];
+const mixFiles = [{ name: "images", maxCount: 5 }];
 
 routes
   .route("/")

@@ -20,23 +20,26 @@ const productSchema = new mongoose.Schema(
       trim: true,
       max: [200000, "Too long product price"],
     },
-    imageCover: {
-      type: String,
-    },
     images: [String],
     category: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
       required: [true, "Product must be belong to category"],
     },
-    imageCoverId: String,
     phone: String,
+    country: String,
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: "Users",
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 productSchema.pre(/^find/, function (next) {
   this.populate("category", "name");
+  this.populate("user");
+
   next();
 });
 module.exports = mongoose.model("Product", productSchema);
