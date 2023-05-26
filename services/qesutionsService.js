@@ -83,3 +83,26 @@ exports.deleteQuestion = asyncHandler(async (req, res, next) => {
   await question.save();
   return res.status(204).json();
 });
+
+exports.deleteAnswer = asyncHandler(async (req, res, next) => {
+  const productQuestion = await Product.findOne({
+    "questions._id": req.params.id,
+  });
+  if (!productQuestion) {
+    return next(new ApiError("this question not found", 400));
+  }
+  if (req.user._id.toString() !== productQuestion.user._id.toString()) {
+    return res.status(200).json({
+      message: "you can't delete answer, owner of product only delete",
+    });
+  }
+  let questionIdx = productQuestion.questions.findIndex(
+    (ele) => ele._id.toString() === req.params.id
+  );
+  if (questionIdx > -1) {
+    productQuestion.questions[questionIdx].answer = undefined;
+    await productQuestion.save();
+  }
+
+  res.status(204).json();
+});
