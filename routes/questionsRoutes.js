@@ -8,12 +8,20 @@ const {
   getQuestionsOfProduct,
 } = require("../services/qesutionsService");
 
+const {
+  createQuestionValidation,
+  createAnswerValidation,
+} = require("../utils/validators/productQuestions");
+
 const router = express.Router();
 
 router.use(protect);
 
-router.route("/:id").post(addQuestion).get(getQuestionsOfProduct);
+router
+  .route("/:id")
+  .post(createQuestionValidation, addQuestion)
+  .get(getQuestionsOfProduct);
 
-router.route("/question/:id").post(addAnswer);
+router.route("/question/:id").post(createAnswerValidation, addAnswer);
 
 module.exports = router;
