@@ -20,7 +20,12 @@ const productSchema = new mongoose.Schema(
       trim: true,
       max: [200000, "Too long product price"],
     },
-    images: [String],
+    images: [
+      {
+        id: { type: mongoose.Types.ObjectId },
+        image: { type: String },
+      },
+    ],
     category: {
       type: mongoose.Types.ObjectId,
       ref: "Category",

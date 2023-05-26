@@ -9,6 +9,7 @@ const {
   updateProduct,
   deleteProduct,
   updatePhoto,
+  deletePhoto,
 } = require("../services/productServices");
 
 const {
@@ -46,6 +47,7 @@ routes
 
 routes
   .route("/updatePhoto/:id")
-  .put(protect, upload.uploadSingle("imageCover"), updatePhoto);
+  .put(protect, upload.uploadSingle("image"), updatePhoto);
 
+routes.route("/deletePhoto/:id").delete(protect, deletePhoto);
 module.exports = routes;

@@ -3,6 +3,7 @@ const fs = require("fs/promises");
 const ApiError = require("../utils/ApiError");
 const cloud = require("../utils/cloudinary");
 const Product = require("../models/productModels");
+const { default: mongoose } = require("mongoose");
 
 exports.getProducts = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
@@ -82,7 +83,8 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
     await Promise.all(
       req.files.images.map(async (ele) => {
         const result = await cloud.uploads(ele.path);
-        imgArray.push(result.url);
+        console.log(result);
+        imgArray.push({ image: result.url });
         await fs.unlink(ele.path);
       })
     );
@@ -116,23 +118,40 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
 exports.updatePhoto = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  const product = await Product.findById(id);
-  if (!product) {
-    return next(new ApiError("this product not found", 400));
+  const productImg = await Product.findOne({ "images._id": id });
+  if (!productImg) {
+    return next(new ApiError("this image of product not found", 400));
   }
   if (!req.file) {
     return next(new ApiError("you must upload photo", 400));
   }
   const result = await cloud.uploads(req.file.path, "products");
-  if (product.imageCoverId !== undefined) {
-    await cloud.destroy(product.imageCoverId);
-  }
-
-  product.imageCover = result.url;
-  product.imageCoverId = result.id;
-
-  await product.save();
   await fs.unlink(req.file.path);
 
+  const findIndex = productImg.images.findIndex(
+    (ele) => ele._id.toString() === id
+  );
+
+  if (findIndex > -1) {
+    productImg.images[findIndex].image = result.url;
+    await productImg.save();
+  }
+
   return res.status(200).json({ message: "photo update successfully" });
+});
+
+exports.deletePhoto = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const productImg = await Product.findOne({ "images._id": id });
+  if (!productImg) {
+    return next(new ApiError("this image of product not found", 400));
+  }
+
+  productImg.images = productImg.images.filter(
+    (ele) => ele._id.toString() !== id
+  );
+  await productImg.save();
+
+  return res.status(204).json();
 });
