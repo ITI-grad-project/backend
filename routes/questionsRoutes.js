@@ -11,6 +11,7 @@ const {
 const {
   createQuestionValidation,
   createAnswerValidation,
+  getQuestionValidator,
 } = require("../utils/validators/productQuestions");
 
 const router = express.Router();
@@ -20,7 +21,7 @@ router.use(protect);
 router
   .route("/:id")
   .post(createQuestionValidation, addQuestion)
-  .get(getQuestionsOfProduct);
+  .get(getQuestionValidator, getQuestionsOfProduct);
 
 router.route("/question/:id").post(createAnswerValidation, addAnswer);
 
