@@ -59,10 +59,27 @@ exports.getQuestionsOfProduct = asyncHandler(async (req, res, next) => {
   if (!product) {
     return next(new ApiError(`No product for this id ${id} `, 404));
   }
-  res
-    .status(200)
-    .json({
-      message: "questions return successfully",
-      data: product.questions,
+  res.status(200).json({
+    message: "questions return successfully",
+    data: product.questions,
+  });
+});
+
+exports.deleteQuestion = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+
+  const question = await Product.findOne({ "questions._id": id });
+  if (!question) {
+    return next(new ApiError("this question of product not found", 400));
+  }
+  if (req.user._id.toString() === question.user._id.toString()) {
+    return res.status(200).json({
+      message: "you can't delete this question",
     });
+  }
+  question.questions = question.questions.filter(
+    (ele) => ele._id.toString() !== id
+  );
+  await question.save();
+  return res.status(204).json();
 });

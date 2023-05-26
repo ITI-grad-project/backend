@@ -6,6 +6,7 @@ const {
   addQuestion,
   addAnswer,
   getQuestionsOfProduct,
+  deleteQuestion,
 } = require("../services/qesutionsService");
 
 const {
@@ -21,7 +22,8 @@ router.use(protect);
 router
   .route("/:id")
   .post(createQuestionValidation, addQuestion)
-  .get(getQuestionValidator, getQuestionsOfProduct);
+  .get(getQuestionValidator, getQuestionsOfProduct)
+  .delete(deleteQuestion);
 
 router.route("/question/:id").post(createAnswerValidation, addAnswer);
 
