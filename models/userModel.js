@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // userSchema.virtual("reviews", {
@@ -74,8 +74,5 @@ const userSchema = new mongoose.Schema(
 //   foreignField: "product",
 //   localField: "_id",
 // });
-userSchema.pre(/^find/, function () {
-  this.populate("wishlist");
-});
 
 module.exports = mongoose.model("Users", userSchema);

@@ -32,14 +32,38 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Users",
     },
+    questions: [
+      {
+        id: {
+          type: mongoose.Types.ObjectId,
+        },
+        question: {
+          type: String,
+          minLength: [5, "Too short question"],
+          maxLength: [100, "Too long question"],
+        },
+        answer: {
+          type: String,
+          minLength: [5, "Too short answer"],
+          maxLength: [100, "Too long answer"],
+        },
+        user: {
+          type: mongoose.Types.ObjectId,
+          ref: "Users",
+        },
+      },
+    ],
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true }
 );
 
 productSchema.pre(/^find/, function (next) {
   this.populate("category", "name");
-  this.populate("user");
-
+  this.populate("user", "userName profileImg ratingQuantity ratingsAverage");
+  this.populate({
+    path: "questions.user",
+    select: "userName profileImg ratingQuantity ratingsAverage",
+  });
   next();
 });
 module.exports = mongoose.model("Product", productSchema);
