@@ -36,6 +36,12 @@ exports.getProducts = asyncHandler(async (req, res) => {
     mongooseQuery = mongooseQuery.select("-__v");
   }
 
+  if (req.query.country) {
+    const countries = req.query.country.split(",");
+    console.log(countries);
+    mongooseQuery = mongooseQuery.find({ country: { $in: countries } });
+  }
+
   if (req.query.sort) {
     const sorting = req.query.sort.split(",").join(" ");
     mongooseQuery = mongooseQuery.sort(sorting);

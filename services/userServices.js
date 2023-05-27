@@ -66,6 +66,7 @@ exports.updateLoggedUser = asyncHandler(async (req, res, next) => {
       email: req.body.email,
       phone: req.body.phone,
       gender: req.body.gender,
+      phone: req.body.phone,
     },
     {
       new: true,
