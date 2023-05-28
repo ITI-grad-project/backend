@@ -6,6 +6,10 @@ const ApiError = require("../utils/ApiError");
 exports.addQuestion = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
+  if (!product) {
+    return next(new ApiError("this product not found", 400));
+  }
+
   if (req.user._id.toString() === product.user._id.toString()) {
     return res.status(200).json({
       message: "you can't add question you can answer only",
@@ -19,11 +23,12 @@ exports.addQuestion = asyncHandler(async (req, res, next) => {
   await product.save();
 
   //get last index put in array
-  const newQuestion = product.questions[product.questions.length - 1]._id;
+  const newQuestion = product.questions[product.questions.length - 1];
 
   res.status(200).json({
     message: "question add successfully",
-    questionId: newQuestion,
+    questionId: newQuestion._id,
+    questionData: newQuestion,
   });
 });
 
@@ -32,7 +37,7 @@ exports.addAnswer = asyncHandler(async (req, res, next) => {
     "questions._id": req.params.id,
   });
   if (!product) {
-    return next(new ApiError("this product not found"));
+    return next(new ApiError("this product not found", 400));
   }
   if (req.user._id.toString() !== product.user._id.toString()) {
     return res.status(200).json({
