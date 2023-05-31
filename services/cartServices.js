@@ -19,6 +19,9 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
   if (!product) {
     return next(new ApiError("this product is not found or removed", 400));
   }
+  if (product.sold) {
+    return next(new ApiError("this product is already sold", 400));
+  }
   if (!cart) {
     cart = await Cart.create({
       cartItems: [{ product: productId, price: product.price }],
