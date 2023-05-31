@@ -33,6 +33,7 @@ const productSchema = new mongoose.Schema(
     },
     phone: String,
     country: String,
+    sold: Boolean,
     user: {
       type: mongoose.Types.ObjectId,
       ref: "Users",
