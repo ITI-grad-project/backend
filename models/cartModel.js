@@ -18,11 +18,11 @@ const cartSchema = new mongoose.Schema({
   totalPrice: Number,
 });
 
-// cartSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: "cartItems.product",
-//   });
-//   next();
-// });
+cartSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "cartItems.product",
+  });
+  next();
+});
 
 module.exports = mongoose.model("Carts", cartSchema);
