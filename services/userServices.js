@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const generateToken = require("../utils/generateTokn");
 const ApiError = require("../utils/ApiError");
 const cloud = require("../utils/cloudinary");
+const Product = require("../models/productModels");
 
 exports.changePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOneAndUpdate(
@@ -79,4 +80,14 @@ exports.updateLoggedUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     data: user,
   });
+});
+
+exports.getMyProducts = asyncHandler(async (req, res, next) => {
+  const products = await Product.find({ user: req.user._id });
+  if (!products.length) {
+    return res.status(200).json({ message: "user don't have products" });
+  }
+  return res
+    .status(200)
+    .json({ message: "success", length: products.length, data: products });
 });

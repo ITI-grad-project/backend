@@ -8,6 +8,7 @@ const {
   getLoggedUser,
   updateLoggedUser,
   deleteUser,
+  getMyProducts,
 } = require("../services/userServices");
 const { protect } = require("../services/authService");
 const { uploadSingle } = require("../middleware/upload_images");
@@ -25,6 +26,8 @@ routes
   .put(uploadSingle("profileImg"), protect, updatePhoto);
 
 routes.route("/getMe").get(protect, getLoggedUser);
+
+routes.route("/getMyProducts").get(protect, getMyProducts);
 
 routes
   .route("/updateMe")
