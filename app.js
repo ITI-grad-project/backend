@@ -7,16 +7,17 @@ const cors = require("cors");
 const compression = require("compression");
 const path = require("path");
 
+require("dotenv").config();
+require("./config/db")();
+
 app.use(express.json());
 app.use(cors());
 app.options("*", cors());
 app.use(compression());
 app.use(express.static(path.join(__dirname, "uploads")));
 
-require("dotenv").config();
-require("./config/db")();
-
 //requires
+const { webHookHandler } = require("./services/orderServices");
 const ApiError = require("./utils/ApiError");
 const globalErrorHandling = require("./middleware/error_middleware");
 
@@ -28,8 +29,15 @@ const addressRoutes = require("./routes/addressRoutes");
 const userRoutes = require("./routes/userRoutes");
 const questionsRoutes = require("./routes/questionsRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 //mounting
+app.post(
+  "/webhock-checkout",
+  express.raw({ type: "application/json" }),
+  webHookHandler
+);
+
 app.use("/api/v1/auth", userAuth);
 app.use("/api/v1/categories", category);
 app.use("/api/v1/products", productRoute);
@@ -38,6 +46,7 @@ app.use("/api/v1/addresses", addressRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/questions", questionsRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.all("*", (req, res, next) =>
   next(new ApiError(`Can't find this route : ${req.originalUrl}`, 400))
