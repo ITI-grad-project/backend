@@ -55,7 +55,6 @@ exports.getAllOrders = asyncHandler(async (req, res, next) => {
   const orders = await Order.find(objectFilter);
   res.status(200).json({
     result: orders.length,
-    page,
     data: orders,
   });
 });
