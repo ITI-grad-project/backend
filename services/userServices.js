@@ -19,7 +19,9 @@ exports.changePassword = asyncHandler(async (req, res, next) => {
 
   //generate token
   const token = generateToken(user._id);
-  return res.status(200).json({ message: "update successfully", token });
+  return res
+    .status(200)
+    .json({ message: "update successfully", token, data: user });
 });
 
 exports.updatePhoto = asyncHandler(async (req, res, next) => {
