@@ -151,7 +151,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ message: "update password successfully", token });
+    .json({ message: "update password successfully", token, data: user });
 });
 
 exports.verifyGoogleAuth = asyncHandler(async (req, res, next) => {
