@@ -2,10 +2,11 @@ const asyncHandler = require("express-async-handler");
 
 const Product = require("../models/productModels");
 const ApiError = require("../utils/ApiError");
+const userModel = require("../models/userModel");
 
 exports.addQuestion = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
-
+  const user = await userModel.findById(req.user._id);
   if (!product) {
     return next(new ApiError("this product not found", 400));
   }
@@ -15,10 +16,11 @@ exports.addQuestion = asyncHandler(async (req, res, next) => {
       message: "you can't add question you can answer only",
     });
   }
+  console.log(user);
 
   product.questions.push({
     question: req.body.question,
-    user: req.user._id,
+    user: user,
   });
   await product.save();
 
