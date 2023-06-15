@@ -9,7 +9,7 @@ const ApiError = require("../utils/ApiError");
 
 exports.createOrder = asyncHandler(async (req, res, next) => {
   const taxPrice = 0;
-  const shippingPrice = 0;
+  const shippingPrice = 50;
   const cart = await Cart.findById(req.params.cartId);
   if (!cart) {
     return next(new ApiError(`no cart for this user`, 404));
@@ -120,7 +120,7 @@ exports.checkOutSession = asyncHandler(async (req, res, next) => {
     return next(new ApiError(`no cart for this user`, 404));
   }
 
-  const totalOrderPrice = cart.totalPrice;
+  const totalOrderPrice = cart.totalPrice + 50;
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -136,8 +136,8 @@ exports.checkOutSession = asyncHandler(async (req, res, next) => {
       },
     ],
     mode: "payment",
-    success_url: `http://localhost:4200/Allorder`,
-    cancel_url: `http://localhost:4200/order`,
+    success_url: `http://localhost:5173/profile`,
+    cancel_url: `http://localhost:5173/`,
     client_reference_id: req.params.cartId,
     customer_email: req.user.email,
     metadata: req.body.shippingAddress,

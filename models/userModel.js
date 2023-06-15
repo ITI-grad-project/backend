@@ -69,10 +69,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-// userSchema.virtual("reviews", {
-//   ref: "Reviews",
-//   foreignField: "product",
-//   localField: "_id",
-// });
+userSchema.virtual("reviews", {
+  ref: "Reviews",
+  foreignField: "targetUser",
+  localField: "_id",
+});
 
 module.exports = mongoose.model("Users", userSchema);
