@@ -28,6 +28,15 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
       user: req.user._id,
     });
   } else {
+    const prodId = cart.cartItems.find((ele) => {
+      return ele.product._id.toString() == productId.toString();
+    });
+    if (prodId) {
+      return res.status(200).json({
+        status: "fail",
+        message: "sorry, you already put this product in cart before",
+      });
+    }
     cart.cartItems.push({ product: productId, price: product.price });
   }
   calcTotalPrice(cart);
