@@ -53,9 +53,7 @@ exports.getLoggedUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.getUserData = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id).select(
-    "-password -addresses -wishlist"
-  );
+  const user = await User.findById(req.params.id).select("-password -wishlist");
   if (!user) {
     return next(new ApiError(`this user not found `, 404));
   }
