@@ -52,6 +52,16 @@ exports.getLoggedUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user });
 });
 
+exports.getUserData = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id).select(
+    "-password -addresses -wishlist"
+  );
+  if (!user) {
+    return next(new ApiError(`this user not found `, 404));
+  }
+  res.status(200).json({ data: user });
+});
+
 exports.deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.user._id);
 
