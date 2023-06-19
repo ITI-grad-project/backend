@@ -42,6 +42,12 @@ exports.getProducts = asyncHandler(async (req, res) => {
     mongooseQuery = mongooseQuery.find({ country: { $in: countries } });
   }
 
+  if (req.query.user) {
+    const user = req.query.user;
+    console.log(user);
+    mongooseQuery = mongooseQuery.find({ user });
+  }
+
   if (req.query.category) {
     const categories = req.query.category;
     console.log(categories);
