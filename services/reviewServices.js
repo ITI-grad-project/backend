@@ -22,6 +22,10 @@ exports.getAllReviews = asyncHandler(async (req, res, next) => {
   const skip = (page - 1) * limit;
   let objectFilter = {};
   if (req.objFilter) objectFilter = req.objFilter;
+  if (req.query.user) {
+    console.log(req.query.user);
+    objectFilter.user = req.query.user;
+  }
   const reviews = await Reviews.find(objectFilter).skip(skip).limit(limit);
   res.status(200).json({
     result: reviews.length,
