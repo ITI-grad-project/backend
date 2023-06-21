@@ -101,3 +101,15 @@ exports.getMyProducts = asyncHandler(async (req, res, next) => {
     .status(200)
     .json({ message: "success", length: products.length, data: products });
 });
+exports.getAllUserData = asyncHandler(async (req, res, next) => {
+  const user = await User.find().select("-password -wishlist");
+  res.status(200).json({ length: user.length, data: user });
+});
+
+exports.deleteSpecifUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(new ApiError("user not found", 404));
+  }
+  res.status(204).json();
+});

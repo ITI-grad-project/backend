@@ -10,8 +10,10 @@ const {
   deleteUser,
   getMyProducts,
   getUserData,
+  getAllUserData,
+  deleteSpecifUser,
 } = require("../services/userServices");
-const { protect } = require("../services/authService");
+const { protect, isAllowedTo } = require("../services/authService");
 const { uploadSingle } = require("../middleware/upload_images");
 const {
   changePasswordValidator,
@@ -37,5 +39,9 @@ routes
   .put(protect, validateUpdateLoggedUser, updateLoggedUser);
 
 routes.route("/").delete(protect, deleteUser);
+
+routes.route("/AllUserData").get(protect, isAllowedTo("admin"), getAllUserData);
+
+routes.route("/:id").delete(protect, isAllowedTo("admin"), deleteSpecifUser);
 
 module.exports = routes;
