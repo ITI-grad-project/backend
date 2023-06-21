@@ -61,6 +61,7 @@ reviewSchema.post("findOneAndDelete", async function (doc) {
 
 reviewSchema.post("save", async function (doc, next) {
   await doc.populate("user");
+  await doc.populate("targetUser");
   next();
 });
 
