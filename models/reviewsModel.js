@@ -42,10 +42,17 @@ reviewSchema.statics.calcAvgRatingAndQuantity = async function (userId) {
       },
     },
   ]);
+  console.log(result);
   if (result.length > 0) {
     await userModel.findByIdAndUpdate(userId, {
       ratingQuantity: result[0].ratingQuantity,
       ratingsAverage: result[0].ratingsAverage,
+    });
+  }
+  if (result.length == 0) {
+    await userModel.findByIdAndUpdate(userId, {
+      ratingQuantity: 0,
+      ratingsAverage: 0,
     });
   }
 };
@@ -55,7 +62,6 @@ reviewSchema.post("save", async function (doc) {
 });
 
 reviewSchema.post("findOneAndDelete", async function (doc) {
-  console.log("doc", doc.targetUser._id);
   await this.model.calcAvgRatingAndQuantity(doc.targetUser._id);
 });
 
