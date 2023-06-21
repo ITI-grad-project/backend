@@ -59,4 +59,9 @@ reviewSchema.post("findOneAndDelete", async function (doc) {
   await this.model.calcAvgRatingAndQuantity(doc.targetUser._id);
 });
 
+reviewSchema.post("save", async function (doc, next) {
+  await doc.populate("user");
+  next();
+});
+
 module.exports = mongoose.model("Reviews", reviewSchema);
