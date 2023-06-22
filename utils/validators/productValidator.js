@@ -28,6 +28,14 @@ exports.createProductValidator = [
     .optional()
     .isArray()
     .withMessage("images should be array of string"),
+  check("country").isIn([
+    "Cairo",
+    "Ismailia",
+    "Port Said",
+    "Alexandria",
+    "Suez",
+    "Giza",
+  ]),
   check("category")
     .notEmpty()
     .withMessage("Product must be belong to a category")
@@ -40,6 +48,7 @@ exports.createProductValidator = [
       }
       return true;
     }),
+
   validator,
 ];
 
