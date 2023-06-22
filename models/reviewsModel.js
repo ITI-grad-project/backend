@@ -52,7 +52,7 @@ reviewSchema.statics.calcAvgRatingAndQuantity = async function (userId) {
   if (result.length == 0) {
     await userModel.findByIdAndUpdate(userId, {
       ratingQuantity: 0,
-      ratingsAverage: 0,
+      $unset: { ratingsAverage: 1 },
     });
   }
 };
