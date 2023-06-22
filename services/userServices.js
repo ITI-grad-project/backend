@@ -6,6 +6,7 @@ const generateToken = require("../utils/generateTokn");
 const ApiError = require("../utils/ApiError");
 const cloud = require("../utils/cloudinary");
 const Product = require("../models/productModels");
+const sendMail = require("../utils/sendMail");
 
 exports.changePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOneAndUpdate(
@@ -112,4 +113,19 @@ exports.deleteSpecifUser = asyncHandler(async (req, res, next) => {
     return next(new ApiError("user not found", 404));
   }
   res.status(204).json();
+});
+
+exports.contactUs = asyncHandler(async (req, res, next) => {
+  const message = `Hi I'm ${req.body.name} ${req.body.message}`;
+  try {
+    await sendMail({
+      userMail: req.body.email,
+      email: "myrefurb87@gmail.com",
+      message: message,
+      subject: req.body.subject,
+    });
+  } catch (err) {
+    return next(new ApiError("failed to send mail ...", 500));
+  }
+  return res.status(200).json({ message: "email sent successfully" });
 });

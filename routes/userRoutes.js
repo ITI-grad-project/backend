@@ -12,6 +12,7 @@ const {
   getUserData,
   getAllUserData,
   deleteSpecifUser,
+  contactUs,
 } = require("../services/userServices");
 const { protect, isAllowedTo } = require("../services/authService");
 const { uploadSingle } = require("../middleware/upload_images");
@@ -43,5 +44,7 @@ routes.route("/").delete(protect, deleteUser);
 routes.route("/AllUserData").get(protect, isAllowedTo("admin"), getAllUserData);
 
 routes.route("/:id").delete(protect, isAllowedTo("admin"), deleteSpecifUser);
+
+routes.route("/contactUs").post(contactUs);
 
 module.exports = routes;
