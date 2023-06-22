@@ -10,10 +10,11 @@ const sendMail = async (options) => {
       pass: process.env.EMAIL_PASSWORD,
     },
   });
+  let sendMail = `MYReFurB <${process.env.EMAIL_USER}>`;
 
   //mailOptions
   const mailOptions = {
-    from: `MYReFurB <${options.userMail || process.env.EMAIL_USER}>`,
+    from: sendMail,
     to: options.email,
     subject: options.subject,
     text: options.message,

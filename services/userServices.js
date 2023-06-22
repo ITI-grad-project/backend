@@ -116,7 +116,7 @@ exports.deleteSpecifUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.contactUs = asyncHandler(async (req, res, next) => {
-  const message = `Hi I'm ${req.body.name} ${req.body.message}`;
+  const message = `Hi I'm ${req.body.name} ${req.body.message} Email: ${req.body.email}`;
   try {
     await sendMail({
       userMail: req.body.email,
