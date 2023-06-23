@@ -23,7 +23,7 @@ routes
   .route("/")
   .get(getLoggedUserOrder, isAllowedTo("user", "admin"), getAllOrders);
 
-routes.route("/:id").get(isAllowedTo("user"), getOrder);
+routes.route("/:id").get(isAllowedTo("user", "admin"), getOrder);
 
 routes.route("/:cartId").post(isAllowedTo("user"), createOrder);
 
