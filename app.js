@@ -18,7 +18,7 @@ require("./config/db")();
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   message:
     "Too many requestes created from this IP, please try again after an 15 minutes",
 });
