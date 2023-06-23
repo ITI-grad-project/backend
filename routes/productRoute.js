@@ -11,6 +11,7 @@ const {
   updatePhoto,
   deletePhoto,
   verifyProduct,
+  addPhoto,
 } = require("../services/productServices");
 
 const {
@@ -51,6 +52,10 @@ routes.route("/verify/:id").put(protect, isAllowedTo("admin"), verifyProduct);
 routes
   .route("/updatePhoto/:id")
   .put(protect, upload.uploadSingle("image"), updatePhoto);
+
+routes
+  .route("/addPhoto/:id")
+  .put(protect, upload.uploadSingle("image"), addPhoto);
 
 routes.route("/deletePhoto/:id").delete(protect, deletePhoto);
 module.exports = routes;

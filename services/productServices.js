@@ -26,7 +26,6 @@ exports.getProducts = asyncHandler(async (req, res) => {
 
   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
   let mongooseQuery = Product.find(JSON.parse(queryStr))
-    .where("verified", true)
     .limit(limit)
     .skip(skip);
 
@@ -192,4 +191,24 @@ exports.deletePhoto = asyncHandler(async (req, res, next) => {
   await productImg.save();
 
   return res.status(204).json();
+});
+
+exports.addPhoto = asyncHandler(async (req, res, next) => {
+  const product = await Product.findOne(req.params.id);
+  if (!product) {
+    return next(new ApiError("this product not found", 404));
+  }
+
+  if (!req.file) {
+    return next(new ApiError(`image is required`, 400));
+  }
+
+  const result = await cloud.uploads(req.file.path, "image");
+  product.images.push(result.url);
+  await product.save();
+
+  res.status(200).json({
+    message: "photo updated successfully",
+    data: product.images,
+  });
 });
