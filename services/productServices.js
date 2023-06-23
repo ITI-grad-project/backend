@@ -201,7 +201,7 @@ exports.deletePhoto = asyncHandler(async (req, res, next) => {
 });
 
 exports.addPhoto = asyncHandler(async (req, res, next) => {
-  const product = await Product.findOne(req.params.id);
+  const product = await Product.findById(req.params.id);
   if (!product) {
     return next(new ApiError("this product not found", 404));
   }
@@ -211,7 +211,7 @@ exports.addPhoto = asyncHandler(async (req, res, next) => {
   }
 
   const result = await cloud.uploads(req.file.path, "image");
-  product.images.push(result.url);
+  product.images.push({ image: result.url });
   await product.save();
 
   res.status(200).json({
