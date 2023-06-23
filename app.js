@@ -6,9 +6,22 @@ const app = express();
 const cors = require("cors");
 const compression = require("compression");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+//prevent http population
+const hpp = require("hpp");
+// prevent no sql query injection
+const mongoSanitize = require("express-mongo-sanitize");
 
 require("dotenv").config();
 require("./config/db")();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  message:
+    "Too many requestes created from this IP, please try again after an 15 minutes",
+});
 
 const { webHookHandler } = require("./services/orderServices");
 
@@ -19,7 +32,12 @@ app.post(
   webHookHandler
 );
 
-app.use(express.json());
+app.use(compression());
+app.use(mongoSanitize());
+app.use(helmet());
+app.use(limiter);
+app.use(hpp());
+app.use(express.json({ limit: "20kb" }));
 app.use(cors());
 app.options("*", cors());
 app.use(compression());
