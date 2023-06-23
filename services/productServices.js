@@ -26,6 +26,7 @@ exports.getProducts = asyncHandler(async (req, res) => {
 
   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
   let mongooseQuery = Product.find(JSON.parse(queryStr))
+    .where("verified", true)
     .limit(limit)
     .skip(skip);
 
@@ -52,6 +53,10 @@ exports.getProducts = asyncHandler(async (req, res) => {
     const categories = req.query.category;
     console.log(categories);
     mongooseQuery = mongooseQuery.find({ category: categories });
+  }
+  if (req.query.verified) {
+    const verify = req.query.verified;
+    mongooseQuery = mongooseQuery.find({ verified: verify });
   }
 
   if (req.query.sort) {
@@ -117,6 +122,21 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.findOneAndUpdate({ _id: id }, req.body, {
     new: true,
   });
+  if (!product) {
+    return next(new ApiError(`No product for this id ${id} `, 404));
+  }
+  res.status(200).json({ data: product });
+});
+
+exports.verifyProduct = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const product = await Product.findOneAndUpdate(
+    { _id: id },
+    { verified: true },
+    {
+      new: true,
+    }
+  );
   if (!product) {
     return next(new ApiError(`No product for this id ${id} `, 404));
   }

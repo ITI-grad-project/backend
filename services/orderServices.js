@@ -51,8 +51,17 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 
 exports.getAllOrders = asyncHandler(async (req, res, next) => {
   let objectFilter = {};
+  let orders;
   if (req.objFilter) objectFilter = req.objFilter;
-  const orders = await Order.find(objectFilter);
+  if (req.user.role === "admin") {
+    let obj = {};
+    if (req.query.user) {
+      obj.user = req.query.user;
+    }
+    orders = await Order.find(obj);
+  } else {
+    orders = await Order.find(objectFilter);
+  }
   res.status(200).json({
     result: orders.length,
     data: orders,

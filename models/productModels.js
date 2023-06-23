@@ -14,6 +14,10 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product description is required"],
       minLength: [20, "Too short product description"],
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     price: {
       type: Number,
       required: [true, "Product price is required"],

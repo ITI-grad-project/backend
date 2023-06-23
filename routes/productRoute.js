@@ -10,6 +10,7 @@ const {
   deleteProduct,
   updatePhoto,
   deletePhoto,
+  verifyProduct,
 } = require("../services/productServices");
 
 const {
@@ -44,6 +45,8 @@ routes
   .get(getProductValidator, getProduct)
   .put(protect, updateProductValidator, updateProduct)
   .delete(protect, deleteProductValidator, deleteProduct);
+
+routes.route("/verify/:id").put(protect, isAllowedTo("admin"), verifyProduct);
 
 routes
   .route("/updatePhoto/:id")
