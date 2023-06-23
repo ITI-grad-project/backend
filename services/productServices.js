@@ -25,9 +25,16 @@ exports.getProducts = asyncHandler(async (req, res) => {
   let queryStr = JSON.stringify(queryStringObj);
 
   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-  let mongooseQuery = Product.find(JSON.parse(queryStr))
-    .limit(limit)
-    .skip(skip);
+  let mongooseQuery;
+
+  if (req.headers.role === "admin") {
+    mongooseQuery = Product.find(JSON.parse(queryStr)).limit(limit).skip(skip);
+  } else {
+    mongooseQuery = Product.find(JSON.parse(queryStr))
+      .limit(limit)
+      .skip(skip)
+      .where("verified", "true");
+  }
 
   if (req.query.fields) {
     const fields = req.query.fields.split(",").join(" ");
