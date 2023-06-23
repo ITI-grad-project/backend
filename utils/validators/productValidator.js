@@ -31,7 +31,7 @@ exports.createProductValidator = [
   check("country").isIn([
     "Cairo",
     "Ismailia",
-    "Port Said",
+    "PortSaid",
     "Alexandria",
     "Suez",
     "Giza",
