@@ -7,7 +7,7 @@ const { default: mongoose } = require("mongoose");
 
 exports.getProducts = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
-  const limit = req.query.limit * 1 || 20;
+  const limit = req.query.limit * 1 || 200;
   const skip = (page - 1) * limit;
   const objectFilter = {};
   if (req.params.categoryId) {
