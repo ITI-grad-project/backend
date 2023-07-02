@@ -145,7 +145,7 @@ exports.checkOutSession = asyncHandler(async (req, res, next) => {
       },
     ],
     mode: "payment",
-    success_url: `http://localhost:5173/profile`,
+    success_url: `${req.protocol}://${req.get("host")}/profile`,
     cancel_url: `http://localhost:5173/`,
     client_reference_id: req.params.cartId,
     customer_email: req.user.email,
